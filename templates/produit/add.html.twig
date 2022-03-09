@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    add
+
+{% endblock %}
+
+{% block body %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form_widget(form._token) }}
+        <div class="row">
+            <div class="form-group mt-2 col-6" readonly="true" >
+                {{ form_row(form.nom) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mt-2 col-6">
+                {{ form_row(form.description) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mt-2 col-6">
+                {{ form_row(form.prix) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group mt-2 col-6">
+                {{ form_row(form.stock) }}
+            </div>
+        </div>
+        <div hidden>
+            {{ form_rest(form) }}
+        </div>
+
+
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Sauvegarder
+            </button>
+        </div>
+
+    </form>
+{% endblock %}
+

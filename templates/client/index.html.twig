@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+
+{# declaration de variables #}
+{% set keyword = app.request.get('keyword') %}
+{% set limit = app.request.get('limit') ?: 2 %}
+{% set offset = app.request.get('offset') %}
+
+{% block body %}
+
+    <a href="{{ path('client_add') }}" class="btn btn-dark mb-2">Nouveau</a>
+
+    <form method="get">
+        <input class="form-control mb-2" name="keyword" value="{{ keyword }}" placeholder="mot clé">
+        <button class="btn btn-primary mb-2">Rechercher <i class="fa fa-search"></i></button>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        {% for c in clients %}
+            <tr>
+                <td>{{ c.reference }}</td>
+                <td>{{ c.nom }}</td>
+                <td>{{ c.prenom }}</td>
+                <td><a href="{{ path('client_delete', { id: c.id }) }}"
+                            class="btn btn-sm btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    <a href="{{ path('client_edit', { id: c.id }) }}"
+                       class="btn btn-sm btn-primary">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                </td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if total > limit %}
+        <ul class="pagination">
+            {% for i in range(1, (total/limit) | round(0, 'ceil')) %}
+                {% if offset == (i-1) * limit %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('client', {
+                            'offset': (i-1) * limit,
+                            'keyword': keyword,
+                            'limit': limit
+                        }) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{#    <a href="{{ path('client', { 'offset': 0 }) }}">1</a>#}
+{#    <a href="{{ path('client', { 'offset': 2 }) }}">2</a>#}
+{#    <a href="{{ path('client', { 'offset': 4 }) }}">3</a>#}
+{#    <a href="{{ path('client', { 'offset': 6 }) }}">4</a>#}
+{% endblock %}

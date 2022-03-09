@@ -1,0 +1,37 @@
+{% set routeName = app.request.attributes.get('_route') %}
+<nav id="main-nav" class="open">
+    <ul>
+        <li class="{{ routeName == 'default_home' ? 'active' : '' }}">
+            {# path fonction symfony integrée à twig pour créer des liens #}
+            {# {name: 'Khun'} ajoutera ?name=khun dans la requete #}
+            <a href="{{ path('default_home', { name: 'Khun' }) }}">
+                <i class="fa fa-home me-2"></i>Accueil
+            </a>
+        </li>
+        <li class="{{ routeName == 'default_contact' ? 'active' : '' }}">
+            <a href="{{ path('default_contact') }}">
+                <i class="fa fa-book me-2"></i>Contact
+            </a>
+        </li>
+        <li class="{{ routeName == 'default_contact_us' ? 'active' : '' }}">
+            <a href="{{ path('default_contact_us') }}">
+                <i class="fa fa-envelope me-2"></i>Contact us
+            </a>
+        </li>
+        <li class="{{ routeName == 'default_register' ? 'active' : '' }}">
+            <a href="{{ path('default_register') }}">
+                <i class="fa fa-user-plus me-2"></i>Fake Register
+            </a>
+        </li>
+        <li class="{{ routeName == 'client' ? 'active' : '' }}">
+            <a href="{{ path('client') }}">
+                <i class="fa fa-users me-2"></i>Clients
+            </a>
+        </li>
+        <li class="{{ routeName == 'produit' ? 'active' : '' }}">
+            <a href="{{ path('app_produit') }}">
+                <i class="fa-solid fa-cannabis me-2"></i>Produits
+            </a>
+        </li>
+    </ul>
+</nav>
