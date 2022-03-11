@@ -1,0 +1,36 @@
+NOUVEAU
+
+1. creer repository sur GitHub
+2. git init sur mon projet(ça creer le dossier .git)
+3. git add . (rajoute tous les fichiers)
+4. git commit -m "Mon message"
+5. git remote add origin https://github.com/Trufunioso/gestion-stock.git (l'url cible ou il doit envoyer)
+6. git push -u origin master (-u pour un ouveau repository)
+------------------------------------------------------------------
+
+PUSH MES MODIFICATIONS
+
+1. git status (ca donne tous les fichiers modifier et ajouter)
+2. git add . (ajoute tous les fichiers sur mon repertoire github)
+3. git commit -m "Mon message de ma modif"
+4. git push origin master (on enleve le -u)
+
+
+---------------------------------------------------------------------------------------
+
+
+POUR CLONER
+
+1. git clone https://github.com/Trufunioso/gestion-stock           dans terminal laragon/www
+2. npm install remettre node
+3. composer update recuperer mes dependances (dossier vendor) et les mettre a jour
+
+POUR DB
+
+1. .env recuperer les donnes du serveur DATABASE_URL="mysql://root:@127.0.0.1:3306/gestionStock?serverVersion=8.0.13"
+2. composer dump-env dev pour generer le fichier env.local
+3. pour creer ma db et me connecter php bin/console doctrine:database:create
+4. data source mysql phpstorm
+5. mes tables se trouve dans mes migrations donc j'execute le fichier des migrations php bin/console doctrine:migations:migrate + remplir un peu la db
+6. npm run watch
+7. symfony server:start / php -S localhost:8000 -t public
