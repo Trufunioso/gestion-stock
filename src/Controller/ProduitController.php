@@ -9,17 +9,27 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProduitController extends AbstractController
 {
     #[Route('/produit', name: 'app_produit')]
-    public function index(ProduitRepository $repo): Response
+    public function index(ProduitRepository $repo, Request $request): Response
     {
         $products = $repo->findAll();
 
+        $products = $repo->findBySearch(
+            $request->query->get('offset'),
+            $request->query->get('limit') ?: 2,
+            $request->query->get('keyword')
+        );
+
+        $total = $repo->countBySearch($request->query->get('keyword'));
+
         return $this->render('produit/index.html.twig', [
-            'produits' => $products
+            'produits' => $products,
+            'total' => $total
         ]);
     }
 
@@ -68,5 +78,19 @@ class ProduitController extends AbstractController
             'product' => $product,
             'form' => $formView
         ]);
+    }
+
+    #[Route('/produit/delete/{id}', name: 'produit_delete')]
+    public function delete($id, ProduitRepository $repo, EntityManagerInterface $em)
+    {
+        $produit = $repo->find($id);
+        if($produit === null || $produit->getDeleted()) {
+            throw new NotFoundHttpException();
+        }
+        //$em->remove($client);
+        $produit->setDeleted(true);
+        $em->flush();
+        $this->addFlash('success', 'Suppression OK');
+        return $this->redirectToRoute('app_produit');
     }
 }

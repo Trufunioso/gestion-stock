@@ -1,16 +1,18 @@
 <?php
 
+
 namespace App\Repository;
 
 use App\Entity\Commande;
+use App\Entity\LigneCommande;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Commande|null find($id, $lockMode = null, $lockVersion = null)
- * @method Commande|null findOneBy(array $criteria, array $orderBy = null)
- * @method Commande[]    findAll()
- * @method Commande[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method LigneCommande|null find($id, $lockMode = null, $lockVersion = null)
+ * @method LigneCommande|null findOneBy(array $criteria, array $orderBy = null)
+ * @method LigneCommande[]    findAll()
+ * @method LigneCommande[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CommandeRepository extends ServiceEntityRepository
 {
@@ -19,32 +21,45 @@ class CommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, Commande::class);
     }
 
-    // /**
-    //  * @return Commande[] Returns an array of Commande objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    private function _getQbWithSearch($keyword) {
+        // SELECT * FROM Commande as c
+        // WHERE deleted = 0 AND (c.NOM LIKE :p1 OR ...)
+        // créer le constructeur de requete
+        $qb = $this->createQueryBuilder('c');
+        $qb->where('c.deleted = 0');
+        if($keyword) {
+            $qb->andWhere('c.reference LIKE :p1 OR c. LIKE :p1 OR p.reference LIKE :p1');
+            $qb->setParameter('p1', $keyword . '%');
+        }
+        return $qb;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Commande
+    public function countBySearch($keyword)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb = $this->_getQbWithSearch($keyword);
+        $qb->select('count(c.id)');
+        // permet de récupérer une valeur unique et non un objet ou une collection
+        return $qb->getQuery()->getSingleScalarResult();
     }
-    */
+
+    public function countByRef($ref) {
+        $qb = $this->createQueryBuilder('c');
+        $qb->where('c.reference LIKE :p1');
+        $qb->setParameter('p1', $ref . '%');
+        $qb->select('COUNT(c.id)');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function findBySearch($offset, $limit, $keyword) {
+        $qb = $this->_getQbWithSearch($keyword);
+        // offset
+        $qb->setFirstResult($offset)
+            // limit
+            ->setMaxResults($limit);
+
+        $qb->orderBy('c.reference');
+        // getResult() // recuperer une liste de resultat
+        // getOneOrNullResult() // recuperer le premier resultat
+        return $qb->getQuery()->getResult();
+    }
 }

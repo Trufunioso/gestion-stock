@@ -19,6 +19,19 @@ class ClientRepository extends ServiceEntityRepository
         parent::__construct($registry, Client::class);
     }
 
+    private function _getQbWithSearch($keyword) {
+        // SELECT * FROM Client as c
+        // WHERE deleted = 0 AND (c.NOM LIKE :p1 OR ...)
+        // créer le constructeur de requete
+        $qb = $this->createQueryBuilder('c');
+        $qb->where('c.deleted = 0');
+        if($keyword) {
+            $qb->andWhere('c.nom LIKE :p1 OR c.prenom LIKE :p1 OR c.reference LIKE :p1');
+            $qb->setParameter('p1', $keyword . '%');
+        }
+        return $qb;
+    }
+
     public function countBySearch($keyword)
     {
         $qb = $this->_getQbWithSearch($keyword);
@@ -48,16 +61,5 @@ class ClientRepository extends ServiceEntityRepository
          return $qb->getQuery()->getResult();
     }
 
-    private function _getQbWithSearch($keyword) {
-        // SELECT * FROM Client as c
-        // WHERE deleted = 0 AND (c.NOM LIKE :p1 OR ...)
-        // créer le constructeur de requete
-        $qb = $this->createQueryBuilder('c');
-        $qb->where('c.deleted = 0');
-        if($keyword) {
-            $qb->andWhere('c.nom LIKE :p1 OR c.prenom LIKE :p1 OR c.reference LIKE :p1');
-            $qb->setParameter('p1', $keyword . '%');
-        }
-        return $qb;
-    }
+
 }

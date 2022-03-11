@@ -2,9 +2,20 @@
 
 {% block title %}Produits{% endblock %}
 
+{# declaration de variables #}
+{% set keyword = app.request.get('keyword') %}
+{% set limit = app.request.get('limit') ?: 2 %}
+{% set offset = app.request.get('offset') %}
+
 {% block body %}
 
     <a href="{{ path('produit_add') }}" class="btn btn-dark mb-2">Nouveau</a>
+
+    <form method="get">
+        <input class="form-control mb-2" name="keyword" value="{{ keyword }}" placeholder="mot clé">
+        <button class="btn btn-primary mb-2">Rechercher <i class="fa fa-search"></i></button>
+    </form>
+
     <table class="table">
         <thead>
         <tr>
@@ -14,17 +25,17 @@
             <th>Stock</th>
         </tr>
         </thead>
-        {% for produit in produits %}
+        {% for p in produits %}
             <tr>
-                <td>{{ produit.reference }}</td>
-                <td>{{ produit.nom }}</td>
-                <td>{{ produit.description }}</td>
-                <td>{{ produit.stock }}</td>
-                <td><a href="#"
+                <td>{{ p.reference }}</td>
+                <td>{{ p.nom }}</td>
+                <td>{{ p.description }}</td>
+                <td>{{ p.stock }}</td>
+                <td><a href="{{ path('produit_delete', {id: p.id}) }}"
                        class="btn btn-sm btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
-                    <a href="{{ path('produit_edit', { id: produit.id }) }}"
+                    <a href="{{ path('produit_edit', { id: p.id }) }}"
                        class="btn btn-sm btn-primary">
                         <i class="fa-solid fa-pen"></i>
                     </a>
@@ -32,4 +43,26 @@
             </tr>
         {% endfor %}
     </table>
+
+        {% if total > limit %}
+            <ul class="pagination">
+                {% for i in range(1, (total/limit) | round(0, 'ceil')) %}
+                    {% if offset == (i-1) * limit %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_produit', {
+                                'offset': (i-1) * limit,
+                                'keyword': keyword,
+                                'limit': limit
+                            }) }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
 {% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{# declaration de variables #}
+{% set keyword = app.request.get('keyword') %}
+{% set limit = app.request.get('limit') ?: 2 %}
+{% set offset = app.request.get('offset') %}
+
+{% block body %}
+    <a href="{{ path('commande_add') }}" class="btn btn-dark mb-2">Nouveau</a>
+
+    <form method="get">
+        <input class="form-control mb-2" name="keyword" value="{{ keyword }}" placeholder="Référence">
+        <button class="btn btn-primary mb-2">Rechercher <i class="fa fa-search"></i></button>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Etat</th>
+            <th>Total</th>
+            <th>Actions</th>
+
+        </tr>
+        </thead>
+        {% for c in commandes %}
+            <tr>
+                <td>{{ c.reference }}</td>
+                <td>{{ c.creationDate | date('d-m-Y') }}</td>
+                <td>{{ c.client }}</td>
+                <td>{{ c.etat }}</td>
+                <td>Total</td>
+                <td><a href="{{ path('commande_edit', { id: c.id }) }}"
+                       class="btn btn-sm btn-primary">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

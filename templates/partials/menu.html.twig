@@ -33,5 +33,10 @@
                 <i class="fa-solid fa-cannabis me-2"></i>Produits
             </a>
         </li>
+        <li class="{{ routeName == 'commande' ? 'active' : '' }}">
+            <a href="{{ path('app_commande') }}">
+                <i class="fa-brands fa-jedi-order me-2"></i>Commandes
+            </a>
+        </li>
     </ul>
 </nav>

@@ -86,9 +86,11 @@ class ClientController extends AbstractController
         return $this->redirectToRoute('client');
     }
 
+
     #[Route('/client/edit/{id}', name: 'client_edit')]
     public function edit($id, ClientRepository $repo, Request $request, EntityManagerInterface $em)
     {
+        //creer un formulaire
         $client = $repo->find($id);
 
         $form = $this->createForm(ClientType::class, $client);
@@ -97,10 +99,13 @@ class ClientController extends AbstractController
 
         $formView = $form->createView();
 
+        // si le formulaire est valide
         if($form->isSubmitted() && $form->isValid()){
+            // modifier dans la db
             $em->flush();
+            // petit message pop up
             $this->addFlash('success', 'edit OK');
-
+            // rediriger
             return $this->redirectToRoute('client');
         }
 
