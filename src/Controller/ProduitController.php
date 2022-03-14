@@ -12,9 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(['/produit'])]
 class ProduitController extends AbstractController
 {
-    #[Route('/produit', name: 'app_produit')]
+    #[Route('/', name: 'app_produit')]
     public function index(ProduitRepository $repo, Request $request): Response
     {
         $products = $repo->findAll();
@@ -33,7 +34,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
-    #[Route('produit/add', name: 'produit_add')]
+    #[Route('/add', name: 'produit_add')]
     public function add(Request $request, EntityManagerInterface $em, ProduitRepository $repo)
     {
         $produit = new Produit();
@@ -63,7 +64,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
-    #[Route('/produit/edit/{id}', name: 'produit_edit')]
+    #[Route('/edit/{id}', name: 'produit_edit')]
     public function edit($id, ProduitRepository $repo, Request $request)
     {
         $product = $repo->find($id);
@@ -80,7 +81,7 @@ class ProduitController extends AbstractController
         ]);
     }
 
-    #[Route('/produit/delete/{id}', name: 'produit_delete')]
+    #[Route('/delete/{id}', name: 'produit_delete')]
     public function delete($id, ProduitRepository $repo, EntityManagerInterface $em)
     {
         $produit = $repo->find($id);

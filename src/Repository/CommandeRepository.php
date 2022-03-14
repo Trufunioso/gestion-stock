@@ -26,9 +26,8 @@ class CommandeRepository extends ServiceEntityRepository
         // WHERE deleted = 0 AND (c.NOM LIKE :p1 OR ...)
         // créer le constructeur de requete
         $qb = $this->createQueryBuilder('c');
-        $qb->where('c.deleted = 0');
         if($keyword) {
-            $qb->andWhere('c.reference LIKE :p1 OR c. LIKE :p1 OR p.reference LIKE :p1');
+            $qb->andWhere('c.reference LIKE :p1');
             $qb->setParameter('p1', $keyword . '%');
         }
         return $qb;

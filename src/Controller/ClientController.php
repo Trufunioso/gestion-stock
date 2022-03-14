@@ -14,9 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/client')]
 class ClientController extends AbstractController
 {
-    #[Route('/client', name: 'client')]
+    #[Route('/', name: 'client')]
     public function index(Request $request, ClientRepository $repo): Response
     {
 //        $clients = $repo->findBy([
@@ -37,7 +38,7 @@ class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/client/add', name: 'client_add')]
+    #[Route('/add', name: 'client_add')]
     public function add(
         Request $request,
         EntityManagerInterface $em,
@@ -72,7 +73,7 @@ class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/client/delete/{id}', name: 'client_delete')]
+    #[Route('/delete/{id}', name: 'client_delete')]
     public function delete($id, ClientRepository $repo, EntityManagerInterface $em)
     {
         $client = $repo->find($id);
@@ -87,7 +88,7 @@ class ClientController extends AbstractController
     }
 
 
-    #[Route('/client/edit/{id}', name: 'client_edit')]
+    #[Route('/edit/{id}', name: 'client_edit')]
     public function edit($id, ClientRepository $repo, Request $request, EntityManagerInterface $em)
     {
         //creer un formulaire

@@ -11,7 +11,10 @@
     <a href="{{ path('commande_add') }}" class="btn btn-dark mb-2">Nouveau</a>
 
     <form method="get">
-        <input class="form-control mb-2" name="keyword" value="{{ keyword }}" placeholder="Référence">
+        <input class="form-control mb-2 col-6" name="keyword" value="{{ keyword }}" placeholder="Référence">
+        {#<input class="form-control mb-2 col-6" name="keyword" value="{{ keyword }}" placeholder="Client">
+        <input class="form-control mb-2 col-6" name="keyword" value="{{ keyword }}" placeholder="Etat">#}
+
         <button class="btn btn-primary mb-2">Rechercher <i class="fa fa-search"></i></button>
     </form>
 
@@ -24,7 +27,6 @@
             <th>Etat</th>
             <th>Total</th>
             <th>Actions</th>
-
         </tr>
         </thead>
         {% for c in commandes %}
@@ -32,7 +34,14 @@
                 <td>{{ c.reference }}</td>
                 <td>{{ c.creationDate | date('d-m-Y') }}</td>
                 <td>{{ c.client }}</td>
-                <td>{{ c.etat }}</td>
+                <td>{{ states[c.etat] }}</td>
+{#                {% if c.etat == '1' %}#}
+{#                    <td>Pending</td>#}
+{#                {% elseif c.etat == '2' %}#}
+{#                    <td>InProgress</td>#}
+{#                {% elseif c.etat == '3' %}#}
+{#                    <td>Deleted</td>#}
+{#                {% endif %}#}
                 <td>Total</td>
                 <td><a href="{{ path('commande_edit', { id: c.id }) }}"
                        class="btn btn-sm btn-primary">
@@ -42,4 +51,23 @@
             </tr>
         {% endfor %}
     </table>
+    {% if total > limit %}
+        <ul class="pagination">
+            {% for i in range(1, (total/limit) | round(0, 'ceil')) %}
+                {% if offset == (i-1) * limit %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('app_commande', {
+                            'offset': (i-1) * limit,
+                            'keyword': keyword,
+                            'limit': limit
+                        }) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

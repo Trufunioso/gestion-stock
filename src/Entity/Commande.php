@@ -30,6 +30,29 @@ class Commande
     #[ORM\ManyToOne(targetEntity: 'App\Entity\Client')]
     #[ORM\JoinColumn(nullable: false)]
     private $client;
+//
+//    #[ORM\ManyToOne(targetEntity: 'App\Entity\Produit')]
+//    #[ORM\JoinColumn(nullable: false)]
+//    private $produit;
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getProduit()
+//    {
+//        return $this->produit;
+//    }
+//
+//    /**
+//     * @param mixed $produit
+//     * @return Commande
+//     */
+//    public function setProduit($produit)
+//    {
+//        $this->produit = $produit;
+//        return $this;
+//    }
+
 
     /**
      * @var LigneCommande[]
@@ -137,9 +160,9 @@ class Commande
     }
 
     /**
-     * @return LigneCommande[]
+     * @return ArrayCollection
      */
-    public function getLignes(): array
+    public function getLignes(): ArrayCollection
     {
         return $this->lignes;
     }

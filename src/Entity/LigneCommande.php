@@ -21,11 +21,11 @@ class LigneCommande
 
     #[ORM\ManyToOne(targetEntity: Produit::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private $produit;
+    private Produit $produit;
 
     #[ORM\ManyToOne(targetEntity: 'App\Entity\Commande', inversedBy: 'lignes')]
     #[ORM\JoinColumn(nullable: false)]
-    private $commande;
+    private Commande $commande;
 
     public function getId(): ?int
     {
